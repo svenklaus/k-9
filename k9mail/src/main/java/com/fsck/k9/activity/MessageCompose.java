@@ -1011,6 +1011,9 @@ public class MessageCompose extends K9Activity implements OnClickListener,
             case R.id.add_attachment:
                 attachmentPresenter.onClickAddAttachment(recipientPresenter);
                 break;
+            case R.id.crypto_status:
+                recipientPresenter.onClickCryptoStatus();
+                break;
             case R.id.read_receipt:
                 onReadReceipt();
                 break;

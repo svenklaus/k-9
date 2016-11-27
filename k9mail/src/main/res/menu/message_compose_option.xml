@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/add_attachment"
+        android:id="@+id/crypto_status"
         android:alphabeticShortcut="n"
         android:title="@string/add_attachment_action"
-        android:icon="?attr/iconActionAddAttachment"
+        android:icon="@drawable/status_lock"
         android:showAsAction="always"
-    />
+        />
     <item
         android:id="@+id/send"
         android:alphabeticShortcut="s"
@@ -14,6 +14,12 @@
         android:icon="?attr/iconActionSend"
         android:showAsAction="always"
     />
+    <item
+        android:id="@+id/add_attachment"
+        android:alphabeticShortcut="n"
+        android:title="@string/add_attachment_action"
+        android:icon="?attr/iconActionAddAttachment"
+        />
     <item
         android:id="@+id/add_from_contacts"
         android:alphabeticShortcut="a"

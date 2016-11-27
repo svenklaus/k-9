@@ -49,7 +49,6 @@ public class RecipientMvpView implements OnFocusChangeListener, OnClickListener 
     private final RecipientSelectView toView;
     private final RecipientSelectView ccView;
     private final RecipientSelectView bccView;
-    private final ViewAnimator cryptoStatusView;
     private final ViewAnimator recipientExpanderContainer;
     private final ViewAnimator cryptoSpecialModeIndicator;
     private RecipientPresenter presenter;
@@ -66,8 +65,6 @@ public class RecipientMvpView implements OnFocusChangeListener, OnClickListener 
         bccWrapper = activity.findViewById(R.id.bcc_wrapper);
         bccDivider = activity.findViewById(R.id.bcc_divider);
         recipientExpanderContainer = (ViewAnimator) activity.findViewById(R.id.recipient_expander_container);
-        cryptoStatusView = (ViewAnimator) activity.findViewById(R.id.crypto_status);
-        cryptoStatusView.setOnClickListener(this);
         cryptoSpecialModeIndicator = (ViewAnimator) activity.findViewById(R.id.crypto_special_mode);
         cryptoSpecialModeIndicator.setOnClickListener(this);
 
@@ -297,14 +294,14 @@ public class RecipientMvpView implements OnFocusChangeListener, OnClickListener 
     }
 
     public void showCryptoStatus(CryptoStatusDisplayType cryptoStatusDisplayType) {
-        boolean shouldBeHidden = cryptoStatusDisplayType.childToDisplay == VIEW_INDEX_HIDDEN;
+        /*boolean shouldBeHidden = cryptoStatusDisplayType.childToDisplay == VIEW_INDEX_HIDDEN;
         if (shouldBeHidden) {
             cryptoStatusView.setVisibility(View.GONE);
             return;
         }
 
         cryptoStatusView.setVisibility(View.VISIBLE);
-        cryptoStatusView.setDisplayedChild(cryptoStatusDisplayType.childToDisplay);
+        cryptoStatusView.setDisplayedChild(cryptoStatusDisplayType.childToDisplay);*/
     }
 
     public void showContactPicker(int requestCode) {
