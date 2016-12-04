@@ -248,6 +248,7 @@ public class RecipientPresenter implements PermissionPingCallback {
         boolean isCryptoConfigured = cryptoProviderState != CryptoProviderState.UNCONFIGURED;
         menu.findItem(R.id.openpgp_inline_enable).setVisible(isCryptoConfigured && !cryptoEnablePgpInline);
         menu.findItem(R.id.openpgp_inline_disable).setVisible(isCryptoConfigured && cryptoEnablePgpInline);
+        menu.findItem(R.id.crypto_status).setVisible(isCryptoConfigured);
 
         boolean showSignOnly = isCryptoConfigured && account.getCryptoSupportSignOnly();
         boolean isSignOnly = cachedCryptoStatus.isSignOnly();
@@ -257,6 +258,19 @@ public class RecipientPresenter implements PermissionPingCallback {
         boolean noContactPickerAvailable = !hasContactPicker();
         if (noContactPickerAvailable) {
             menu.findItem(R.id.add_from_contacts).setVisible(false);
+        }
+
+        if (isCryptoConfigured) {
+            ComposeCryptoStatus cryptoStatus = getCurrentCryptoStatus();
+            int lockDrawable = R.drawable.status_lock_closed;
+
+            if (cryptoStatus.isCryptoDisabled()) {
+                lockDrawable = R.drawable.status_lock_disabled;
+            } else if (cryptoStatus.getSendErrorStateOrNull() != null) {
+                lockDrawable = R.drawable.status_lock_error;
+            }
+
+            menu.findItem(R.id.crypto_status).setIcon(lockDrawable);
         }
     }
 

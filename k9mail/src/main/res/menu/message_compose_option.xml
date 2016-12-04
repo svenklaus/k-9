@@ -4,7 +4,7 @@
         android:id="@+id/crypto_status"
         android:alphabeticShortcut="n"
         android:title="@string/add_attachment_action"
-        android:icon="@drawable/status_lock"
+        android:icon="@drawable/status_lock_closed"
         android:showAsAction="always"
         />
     <item
