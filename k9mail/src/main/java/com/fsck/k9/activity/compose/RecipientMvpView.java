@@ -396,7 +396,9 @@ public class RecipientMvpView implements OnFocusChangeListener, OnClickListener 
     }
 
     public void showCryptoDialog(CryptoMode currentCryptoMode) {
-        CryptoSettingsDialog dialog = CryptoSettingsDialog.newInstance(currentCryptoMode);
+        //CryptoSettingsDialog dialog = CryptoSettingsDialog.newInstance(currentCryptoMode);
+        //dialog.show(activity.getFragmentManager(), "crypto_settings");
+        CryptoSettingsDialogSimple dialog = new CryptoSettingsDialogSimple();
         dialog.show(activity.getFragmentManager(), "crypto_settings");
     }
 
