@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.util.Log;
 import android.view.Menu;
 
@@ -398,11 +399,6 @@ public class RecipientPresenter implements PermissionPingCallback {
         }
     }
 
-    public boolean isAllowSavingDraftRemotely() {
-        ComposeCryptoStatus cryptoStatus = getCurrentCryptoStatus();
-        return cryptoStatus.isEncryptionEnabled() || cryptoStatus.isSigningEnabled();
-    }
-
     @SuppressWarnings("UnusedParameters")
     public void onToTokenAdded(Recipient recipient) {
         updateCryptoStatus();
@@ -555,7 +551,9 @@ public class RecipientPresenter implements PermissionPingCallback {
     }
 
     public void onNonRecipientFieldFocused() {
-        hideEmptyExtendedRecipientFields();
+        if (!account.isAlwaysShowCcBcc()) {
+            hideEmptyExtendedRecipientFields();
+        }
     }
 
     public void onClickCryptoStatus() {
@@ -735,16 +733,6 @@ public class RecipientPresenter implements PermissionPingCallback {
     }
 
     public void onMenuSetPgpInline(boolean enablePgpInline) {
-        if (getCurrentCryptoStatus().isSignOnly()) {
-            if (cryptoEnablePgpInline) {
-                Log.e(K9.LOG_TAG, "Inconsistent state: PGP/INLINE was enabled in sign-only mode!");
-                onCryptoPgpInlineChanged(false);
-            }
-
-            recipientMvpView.showErrorSignOnlyInline();
-            return;
-        }
-
         onCryptoPgpInlineChanged(enablePgpInline);
         if (enablePgpInline) {
             boolean shouldShowPgpInlineDialog = checkAndIncrementPgpInlineDialogCounter();
@@ -756,12 +744,6 @@ public class RecipientPresenter implements PermissionPingCallback {
 
     public void onMenuSetSignOnly(boolean enableSignOnly) {
         if (enableSignOnly) {
-            if (getCurrentCryptoStatus().isPgpInlineModeEnabled()) {
-                recipientMvpView.showErrorInlineSignOnly();
-                return;
-            }
-
-            onCryptoPgpInlineChanged(false);
             onCryptoModeChanged(CryptoMode.SIGN_ONLY);
             boolean shouldShowPgpSignOnlyDialog = checkAndIncrementPgpSignOnlyDialogCounter();
             if (shouldShowPgpSignOnlyDialog) {
@@ -773,6 +755,7 @@ public class RecipientPresenter implements PermissionPingCallback {
     }
 
     public void onCryptoPgpSignOnlyDisabled() {
+        onCryptoPgpInlineChanged(false);
         onCryptoModeChanged(CryptoMode.OPPORTUNISTIC);
     }
 
@@ -796,13 +779,19 @@ public class RecipientPresenter implements PermissionPingCallback {
 
     void onClickCryptoSpecialModeIndicator() {
         ComposeCryptoStatus currentCryptoStatus = getCurrentCryptoStatus();
-        if (currentCryptoStatus.isPgpInlineModeEnabled()) {
-            recipientMvpView.showOpenPgpInlineDialog(false);
-        } else if (currentCryptoStatus.isSignOnly()) {
+        if (currentCryptoStatus.isSignOnly()) {
             recipientMvpView.showOpenPgpSignOnlyDialog(false);
+        } else if (currentCryptoStatus.isPgpInlineModeEnabled()) {
+            recipientMvpView.showOpenPgpInlineDialog(false);
         } else {
             throw new IllegalStateException("This icon should not be clickable while no special mode is active!");
         }
+    }
+
+    @VisibleForTesting
+    void setOpenPgpServiceConnection(OpenPgpServiceConnection openPgpServiceConnection, String cryptoProvider) {
+        this.openPgpServiceConnection = openPgpServiceConnection;
+        this.cryptoProvider = cryptoProvider;
     }
 
     public enum CryptoProviderState {
